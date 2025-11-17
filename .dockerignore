@@ -1,0 +1,8 @@
+.venv
+__pycache__
+*.pyc
+uploads/
+faiss_index_multi/
+faiss_index_followups/
+instance/
+context_docs/
