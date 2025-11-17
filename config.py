@@ -20,7 +20,7 @@ class Config:
     # Configuraciones de RAG y Modelos
     FAISS_INDEX_PATH = "./faiss_index_multi" 
     FAISS_FOLLOWUP_INDEX_PATH = "./faiss_index_followups"
-    EMBEDDING_MODEL_NAME = 'all-MiniLM-L6-v2'
+    EMBEDDING_MODEL_NAME = 'paraphrase-MiniLM-L3-v2'
     NUM_RELEVANT_CHUNKS = 7 # Aumentado para más contexto
     GEMINI_API_KEY = os.environ.get('GEMINI_API_KEY')
 

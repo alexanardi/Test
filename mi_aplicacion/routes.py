@@ -257,9 +257,15 @@ def chat_avanzado():
 def analyze_page():
     if not session.get('current_file_path'): flash('Carga un archivo CSV.', 'warning'); return redirect(url_for('main.index'))
     vs_inst_local, vs_followup_local, load_error = vector_store, vector_store_followups, False
-    if not embedding_model_instance: 
-        load_error = True
-        flash("Error crítico: El modelo de embeddings no está disponible. El análisis contextual puede fallar.", 'danger')
+    if not embedding_model_instance:
+        try:
+            initialize_rag_components(current_app.config)
+            vs_inst_local, vs_followup_local = vector_store, vector_store_followups
+            load_error = False if embedding_model_instance else True
+        except Exception:
+            load_error = True
+        if load_error:
+            flash("Error crítico: El modelo de embeddings no está disponible. El análisis contextual puede fallar.", 'danger')
 
     if request.method == 'POST':
         user_prompt = request.form.get('user_prompt', '')

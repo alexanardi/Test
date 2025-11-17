@@ -8,6 +8,8 @@ services:
     envVars:
       - key: FLASK_CONFIG
         value: prod
+      - key: TOKENIZERS_PARALLELISM
+        value: "false"
       - key: UPLOAD_FOLDER
         value: /opt/render/persistent/uploads
       - key: CONTEXT_DOCS_FOLDER

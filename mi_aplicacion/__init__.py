@@ -74,8 +74,7 @@ def create_app(config_name='dev'):
 
     init_sqlite_db(app.config['DATABASE_FILE'])
 
-    with app.app_context():
-        initialize_rag_components(app.config) 
+    
 
     with app.app_context():
         from . import routes
