@@ -372,8 +372,7 @@ def analyze_data_with_gemini(data_string, user_prompt, vs_inst, vs_followup,
 
     if not api_key:
         return create_error_response("Configuración: Falta la clave API de Gemini.")
-    if not embedding_model_instance:
-        return create_error_response("Crítico: Modelo de embeddings no cargado.")
+    embeddings_available = bool(embedding_model_instance)
 
     # ... (lógica de RAG para contexto institucional y follow-ups no cambia) ...
     
@@ -389,7 +388,7 @@ def analyze_data_with_gemini(data_string, user_prompt, vs_inst, vs_followup,
     if not is_reporte_360 and not is_plan_intervencion: 
         if not final_user_instruction: 
              final_user_instruction = default_analysis_prompt
-        if vs_inst: # Institutional context vector store
+        if embeddings_available and vs_inst: 
             try:
                 # ... (código interno de búsqueda RAG institucional) ...
                 relevant_docs_inst = vs_inst.similarity_search(final_user_instruction, k=num_relevant_chunks_config)
@@ -402,15 +401,15 @@ def analyze_data_with_gemini(data_string, user_prompt, vs_inst, vs_followup,
         relevant_docs_fu_final = []
         try:
             # ... (código interno de búsqueda RAG de seguimiento (reportes/obs)) ...
-            if entity_type and entity_name: 
+            if embeddings_available and entity_type and entity_name: 
                 # ... (lógica de RAG específico de entidad) ...
                 all_db_followups_as_lc_docs = load_follow_ups_as_documents(current_app.config['DATABASE_FILE'])
                 # ... (resto de lógica de filtrado y búsqueda RAG) ...
                 if not relevant_docs_fu_final:
                     retrieved_context_followup = f"No se encontraron seguimientos específicos para {entity_type.capitalize()} '{entity_name}' que sean relevantes para la consulta actual."
             
-            else: # General search (no entity specified) - use the global vs_followup
-                if vs_followup:
+            else:
+                if embeddings_available and vs_followup:
                     relevant_docs_fu_final = vs_followup.similarity_search(final_user_instruction, k=num_relevant_chunks_config)
                     # ... (resto de lógica RAG general) ...
                 else:
