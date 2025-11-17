@@ -1,0 +1,25 @@
+services:
+  - type: web
+    name: tutoria360
+    env: python
+    buildCommand: pip install -r requirements.txt
+    startCommand: gunicorn run:app -b 0.0.0.0:$PORT
+    envVars:
+      - key: FLASK_CONFIG
+        value: prod
+      - key: GEMINI_API_KEY
+        sync: false
+      - key: UPLOAD_FOLDER
+        value: /opt/render/persistent/uploads
+      - key: CONTEXT_DOCS_FOLDER
+        value: /opt/render/persistent/context_docs
+      - key: DATABASE_FILE
+        value: /opt/render/persistent/seguimiento.db
+      - key: FAISS_INDEX_PATH
+        value: /opt/render/persistent/faiss_index_multi
+      - key: FAISS_FOLLOWUP_INDEX_PATH
+        value: /opt/render/persistent/faiss_index_followups
+    disk:
+      name: storage
+      mountPath: /opt/render/persistent
+      sizeGB: 1
